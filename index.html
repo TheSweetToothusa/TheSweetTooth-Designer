@@ -42,6 +42,43 @@
             width: 300px;
         }
 
+        .control-group {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .size-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .size-slider {
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .control-btn {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .control-btn:hover {
+            background: #e0e0e0;
+        }
+
+        #size-display {
+            min-width: 50px;
+            text-align: center;
+        }
+
         .preview-shape {
             border: 2px solid rgba(51, 51, 51, 0.3);
             overflow: hidden;
@@ -90,11 +127,11 @@
         }
 
         #preview-image {
-            width: auto;
-            height: auto;
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
+            transform-origin: center;
+            transition: transform 0.3s ease;
         }
 
         #preview-text {
@@ -105,50 +142,26 @@
             z-index: 2;
         }
 
-        .rotation-controls {
-            display: none;
+        .saved-designs-section {
+            margin-top: 15px;
+        }
+
+        .saved-designs-list {
+            max-height: 150px;
+            overflow-y: auto;
             margin: 10px 0;
-            padding: 10px 0;
-            border-top: 1px solid #eee;
-        }
-
-        .rotation-slider {
-            width: 100%;
-            margin: 10px 0;
-        }
-
-        .rotation-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .rotation-btn {
-            padding: 5px 10px;
-            background: #f0f0f0;
             border: 1px solid #ddd;
             border-radius: 4px;
+        }
+
+        .saved-design-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
             cursor: pointer;
         }
 
-        .template-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            align-items: flex-start;
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 10px;
-            font-family: 'Poppins', sans-serif;
+        .saved-design-item:hover {
+            background: #f5f5f5;
         }
 
         .print-layout {
@@ -168,41 +181,23 @@
             justify-content: center;
         }
 
-        .print-item {
-            border: 2px solid rgba(51, 51, 51, 0.3);
-            overflow: hidden;
-            position: relative;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .quantity-selector {
+            margin-bottom: 15px;
         }
 
-        .print-item .image-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .print-item img {
-            width: auto;
-            height: auto;
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
+        .quantity-selector select,
+        .quantity-selector input {
+            margin-top: 5px;
         }
 
         .action-buttons {
             margin: 20px 0;
+            display: flex;
+            gap: 10px;
         }
 
         button {
             padding: 10px 20px;
-            margin: 0 10px;
             background: #ff69b4;
             color: white;
             border: none;
@@ -245,49 +240,90 @@
     
     <div class="template-container">
         <div class="controls">
-            <label for="shape-select">Select Shape:</label>
-            <select id="shape-select">
-                <option value="oreo">Oreo (1.5" circle)</option>
-                <option value="business-card">Business Card (3.9" × 2")</option>
-                <option value="plaque-a">Plaque A (6.3" × 2.2")</option>
-                <option value="plaque-b">Plaque B (6.4" × 4")</option>
-                <option value="paver">Artistic Paver (5.5" × 2.2")</option>
-            </select>
+            <div class="control-group">
+                <label for="shape-select">Select Shape:</label>
+                <select id="shape-select">
+                    <option value="oreo">Oreo (1.5" circle)</option>
+                    <option value="business-card">Business Card (3.9" × 2")</option>
+                    <option value="plaque-a">Plaque A (6.3" × 2.2")</option>
+                    <option value="plaque-b">Plaque B (6.4" × 4")</option>
+                    <option value="paver">Artistic Paver (5.5" × 2.2")</option>
+                </select>
 
-            <label for="image-upload">Upload Image:</label>
-            <input type="file" id="image-upload" accept="image/*">
-
-            <div id="rotation-controls" class="rotation-controls">
-                <label>Rotate Image:</label>
-                <input type="range" id="rotation-slider" class="rotation-slider" min="0" max="360" value="0">
-                <div class="rotation-buttons">
-                    <button onclick="rotateImage(-90)" class="rotation-btn">↺ 90°</button>
-                    <span id="rotation-value">0°</span>
-                    <button onclick="rotateImage(90)" class="rotation-btn">↻ 90°</button>
+                <div class="quantity-selector">
+                    <label for="print-quantity">Print Quantity:</label>
+                    <select id="print-quantity">
+                        <option value="full">Full Page</option>
+                        <option value="half">Half Page</option>
+                        <option value="single">Single</option>
+                        <option value="custom">Custom Amount</option>
+                    </select>
+                    <div id="custom-quantity" style="display: none;">
+                        <input type="number" min="1" max="20" value="1">
+                    </div>
                 </div>
-                <button onclick="resetRotation()" class="rotation-btn">Reset Rotation</button>
             </div>
-            
-            <label for="text-input">Add Text:</label>
-            <input type="text" id="text-input" placeholder="Enter text here">
-            
-            <label for="font-family">Font Style:</label>
-            <select id="font-family">
-                <option value="Poppins">Poppins</option>
-                <option value="Roboto">Roboto</option>
-                <option value="Open Sans">Open Sans</option>
-                <option value="Lato">Lato</option>
-                <option value="Montserrat">Montserrat</option>
-            </select>
-            
-            <label for="font-size">Font Size:</label>
-            <input type="number" id="font-size" value="20" min="8" max="72">
-            
-            <label for="text-color">Text Color:</label>
-            <input type="color" id="text-color" value="#000000">
 
-            <label for="border-width">Border Thickness (px):</label>
-            <input type="number" id="border-width" value="2" min="0" max="10" step="1">
+            <div class="control-group">
+                <label for="image-upload">Upload Image:</label>
+                <input type="file" id="image-upload" accept="image/*">
+                
+                <div class="size-controls">
+                    <button class="control-btn" onclick="adjustImageSize('decrease')">-</button>
+                    <input type="range" id="size-slider" min="10" max="200" value="100">
+                    <button class="control-btn" onclick="adjustImageSize('increase')">+</button>
+                    <span id="size-display">100%</span>
+                </div>
+                <button class="control-btn" onclick="resetImageSize()">Reset Size</button>
+
+                <div id="rotation-controls" style="display: none;">
+                    <label>Rotate Image:</label>
+                    <input type="range" id="rotation-slider" min="0" max="360" value="0">
+                    <div style="display: flex; justify-content: space-between;">
+                        <button onclick="rotateImage(-90)" class="control-btn">↺ 90°</button>
+                        <span id="rotation-value">0°</span>
+                        <button onclick="rotateImage(90)" class="control-btn">↻ 90°</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="text-input">Add Text:</label>
+                <input type="text" id="text-input" placeholder="Enter text here">
+                
+                <label for="font-family">Font Style:</label>
+                <select id="font-family">
+                    <option value="Poppins">Poppins</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                </select>
+                
+                <label for="font-size">Font Size:</label>
+                <input type="number" id="font-size" value="20" min="8" max="72">
+                
+                <label for="text-color">Text Color:</label>
+                <input type="color" id="text-color" value="#000000">
+            </div>
+
+            <div class="control-group">
+                <label for="border-width">Border Thickness (px):</label>
+                <input type="number" id="border-width" value="2" min="0" max="10" step="1">
+            </div>
+
+            <div class="saved-designs-section">
+                <label for="design-name">Save Current Design:</label>
+                <input type="text" id="design-name" placeholder="Enter design name">
+                <button onclick="saveCurrentDesign()" class="control-btn">Save Design</button>
+                
+                <div class="saved-designs-list" id="saved-designs">
+                    <!-- Saved designs will be listed here -->
+                </div>
+                
+                <button onclick="loadSelectedDesign()" class="control-btn">Load Selected Design</button>
+                <button onclick="deleteSelectedDesign()" class="control-btn">Delete Selected Design</button>
+            </div>
         </div>
 
         <div id="preview-container" class="preview-shape oreo">
@@ -321,115 +357,106 @@
         const rotationControls = document.getElementById('rotation-controls');
         const rotationSlider = document.getElementById('rotation-slider');
         const rotationValue = document.getElementById('rotation-value');
+        const sizeSlider = document.getElementById('size-slider');
+        const sizeDisplay = document.getElementById('size-display');
+        const printQuantity = document.getElementById('print-quantity');
+        const customQuantity = document.getElementById('custom-quantity');
+        const designName = document.getElementById('design-name');
+        const savedDesignsList = document.getElementById('saved-designs');
         
         let currentImageDataUrl = '';
         let currentRotation = 0;
+        let currentScale = 1;
 
-        shapeSelect.addEventListener('change', function() {
-            const shape = this.value;
-            previewContainer.className = `preview-shape ${shape}`;
-            rotationControls.style.display = shape === 'oreo' ? 'none' : 'block';
+        // Handle print quantity selection
+        printQuantity.addEventListener('change', function() {
+            customQuantity.style.display = 
+                this.value === 'custom' ? 'block' : 'none';
         });
 
-        imageUpload.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentImageDataUrl = e.target.result;
-                    previewImage.src = currentImageDataUrl;
-                    resetRotation();
-                }
-                reader.readAsDataURL(file);
+        function getQuantityCount() {
+            switch(printQuantity.value) {
+                case 'full': return 20;
+                case 'half': return 10;
+                case 'single': return 1;
+                case 'custom': return parseInt(customQuantity.querySelector('input').value) || 1;
+                default: return 20;
             }
-        });
-
-        textInput.addEventListener('input', updateText);
-        fontFamily.addEventListener('change', updateText);
-        fontSize.addEventListener('input', updateText);
-        textColor.addEventListener('input', updateText);
-        borderWidth.addEventListener('input', updateBorder);
-        rotationSlider.addEventListener('input', function() {
-            currentRotation = parseInt(this.value);
-            updateRotation();
-        });
-
-        function updateText() {
-            previewText.textContent = textInput.value;
-            previewText.style.fontFamily = fontFamily.value;
-            previewText.style.fontSize = `${fontSize.value}px`;
-            previewText.style.color = textColor.value;
         }
 
-        function updateBorder() {
-            const width = borderWidth.value;
-            previewContainer.style.border = `${width}px solid rgba(51, 51, 51, 0.3)`;
-        }
+        // Save and load functionality
+        function saveCurrentDesign() {
+            if (!designName.value.trim()) {
+                alert('Please enter a name for your design');
+                return;
+            }
 
-        function rotateImage(degrees) {
-            currentRotation = (currentRotation + degrees + 360) % 360;
-            updateRotation();
-        }
-
-        function updateRotation() {
-            rotationSlider.value = currentRotation;
-            rotationValue.textContent = `${currentRotation}°`;
-            previewImage.style.transform = `rotate(${currentRotation}deg)`;
-        }
-
-        function resetRotation() {
-            currentRotation = 0;
-            updateRotation();
-        }
-
-        function createPrintLayout() {
-            const printGrid = document.getElementById('print-grid');
-            const shape = shapeSelect.value;
-            printGrid.innerHTML = '';
-            
-            const gridConfigs = {
-                'oreo': { cols: 4, rows: 5 },
-                'business-card': { cols: 2, rows: 4 },
-                'plaque-a': { cols: 1, rows: 4 },
-                'plaque-b': { cols: 1, rows: 2 },
-                'paver': { cols: 1, rows: 4 }
+            const design = {
+                name: designName.value,
+                shape: shapeSelect.value,
+                image: currentImageDataUrl,
+                text: textInput.value,
+                fontFamily: fontFamily.value,
+                fontSize: fontSize.value,
+                textColor: textColor.value,
+                borderWidth: borderWidth.value,
+                rotation: currentRotation,
+                scale: currentScale
             };
 
-            const config = gridConfigs[shape];
-            printGrid.style.gridTemplateColumns = `repeat(${config.cols}, auto)`;
+            let savedDesigns = JSON.parse(localStorage.getItem('savedDesigns') || '{}');
+            savedDesigns[design.name] = design;
+            localStorage.setItem('savedDesigns', JSON.stringify(savedDesigns));
             
-            const totalItems = config.cols * config.rows;
-            
-            for (let i = 0; i < totalItems; i++) {
-                const item = document.createElement('div');
-                item.className = `print-item ${shape}`;
-                item.style.border = previewContainer.style.border;
-                
-                if (currentImageDataUrl) {
-                    const imageContainer = document.createElement('div');
-                    imageContainer.className = 'image-container';
-                    const img = document.createElement('img');
-                    img.src = currentImageDataUrl;
-                    img.style.transform = `rotate(${currentRotation}deg)`;
-                    imageContainer.appendChild(img);
-                    item.appendChild(imageContainer);
-                }
-                
-                if (textInput.value) {
-                    const text = document.createElement('div');
-                    text.className = 'text-overlay';
-                    text.textContent = textInput.value;
-                    text.style.fontFamily = fontFamily.value;
-                    text.style.fontSize = `${fontSize.value}px`;
-                    text.style.color = textColor.value;
-                    item.appendChild(text);
-                }
-                
-                printGrid.appendChild(item);
-            }
-            
-            document.querySelector('.print-layout').style.display = 'block';
+            updateSavedDesignsList();
+            designName.value = '';
         }
-    </script>
-</body>
-</html>
+
+        function updateSavedDesignsList() {
+            const designs = JSON.parse(localStorage.getItem('savedDesigns') || '{}');
+            savedDesignsList.innerHTML = '';
+            
+            Object.keys(designs).forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'saved-design-item';
+                div.textContent = name;
+                div.onclick = () => loadDesign(name);
+                savedDesignsList.appendChild(div);
+            });
+        }
+
+        function loadDesign(name) {
+            const designs = JSON.parse(localStorage.getItem('savedDesigns') || '{}');
+            const design = designs[name];
+            
+            if (design) {
+                shapeSelect.value = design.shape;
+                shapeSelect.dispatchEvent(new Event('change'));
+                
+                if (design.image) {
+                    currentImageDataUrl = design.image;
+                    previewImage.src = design.image;
+                }
+                
+                textInput.value = design.text || '';
+                fontFamily.value = design.fontFamily;
+                fontSize.value = design.fontSize;
+                textColor.value = design.textColor;
+                borderWidth.value = design.borderWidth;
+                
+                currentRotation = design.rotation || 0;
+                currentScale = design.scale || 1;
+                
+                updateText();
+                updateBorder();
+                updateRotation();
+                updateImageSize();
+            }
+        }
+
+        function deleteSelectedDesign() {
+            const selected = savedDesignsList.querySelector('.selected');
+            if (!selected) return;
+            
+            if (confirm(`Delete design "${selected.textContent}"?`)) {
+                let designs = JSON.parse(localStorage.getItem('savedDesigns') || '{}');
