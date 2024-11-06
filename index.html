@@ -1,17 +1,76 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html>
 <head>
     <title>The Sweet Tooth - Design Template</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;500;600&family=Roboto&family=Open+Sans&family=Lato&display=swap" rel="stylesheet">
     <style>
-        /* Existing CSS remains unchanged */
+        /* Add CSS styling for different shapes */
+        .business-header {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            background: #ff69b4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            color: white;
+        }
+
+        .controls, .preview-shape {
+            margin: 20px;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .preview-shape {
+            border: 2px solid rgba(51, 51, 51, 0.3);
+            overflow: hidden;
+            position: relative;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .oreo, .business-card, .plaque-a, .plaque-b, .paver {
+            border-radius: 4px;
+        }
+
+        /* Set specific dimensions for different shapes */
+        .oreo { width: 1.5in; height: 1.5in; border-radius: 50%; }
+        .business-card { width: 3.9in; height: 2in; }
+        .plaque-a { width: 6.3in; height: 2.2in; }
+        .plaque-b { width: 6.4in; height: 4in; }
+        .paver { width: 5.5in; height: 2.2in; }
+
+        /* Image styling */
+        #preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="business-header">
         <h1 class="page-title">The Sweet Tooth</h1>
     </div>
-    
+
     <div class="template-container">
         <div class="controls">
             <div class="control-group">
@@ -23,93 +82,80 @@
                     <option value="plaque-b">Plaque B (6.4" × 4")</option>
                     <option value="paver">Artistic Paver (5.5" × 2.2")</option>
                 </select>
+            </div>
 
-                <div class="quantity-selector">
-                    <label for="print-quantity">Print Quantity:</label>
-                    <select id="print-quantity">
-                        <option value="full">Full Page</option>
-                        <option value="half">Half Page</option>
-                        <option value="single">Single</option>
-                        <option value="custom">Custom Amount</option>
-                    </select>
-                    <div id="custom-quantity" style="display: none;">
-                        <input type="number" min="1" max="20" value="1" placeholder="Enter custom amount">
-                    </div>
+            <div class="control-group">
+                <label for="print-quantity">Print Quantity:</label>
+                <select id="print-quantity">
+                    <option value="full">Full Page</option>
+                    <option value="half">Half Page</option>
+                    <option value="single">Single</option>
+                    <option value="custom">Custom Amount</option>
+                </select>
+                <div id="custom-quantity" style="display: none;">
+                    <input type="number" min="1" max="20" value="1" placeholder="Enter custom amount">
                 </div>
             </div>
 
             <div class="control-group">
                 <label for="image-upload">Upload Image:</label>
                 <input type="file" id="image-upload" accept="image/*">
-                <div class="size-controls">
-                    <button class="control-btn" onclick="adjustImageSize('decrease')">-</button>
-                    <input type="range" id="size-slider" min="10" max="200" value="100">
-                    <button class="control-btn" onclick="adjustImageSize('increase')">+</button>
-                    <span id="size-display">100%</span>
-                </div>
-                <button class="control-btn" onclick="resetImageSize()">Reset Size</button>
             </div>
 
-            <!-- Existing controls and HTML content remain unchanged -->
-
-            <div id="preview-container" class="preview-shape oreo">
-                <div class="image-container">
-                    <img id="preview-image" style="display: none;">
-                </div>
-                <div id="preview-text"></div>
+            <div class="control-group">
+                <label for="size-slider">Adjust Image Size:</label>
+                <input type="range" id="size-slider" min="10" max="200" value="100">
+                <span id="size-display">100%</span>
             </div>
         </div>
 
-        <div class="action-buttons">
-            <button onclick="createPrintLayout()">Create Print Layout</button>
-            <button onclick="window.print()">Print</button>
+        <div id="preview-container" class="preview-shape oreo">
+            <img id="preview-image" src="">
         </div>
     </div>
 
     <script>
         const imageUpload = document.getElementById('image-upload');
         const previewImage = document.getElementById('preview-image');
+        const shapeSelect = document.getElementById('shape-select');
+        const previewContainer = document.getElementById('preview-container');
+        const sizeSlider = document.getElementById('size-slider');
+        const sizeDisplay = document.getElementById('size-display');
         const printQuantity = document.getElementById('print-quantity');
         const customQuantity = document.getElementById('custom-quantity');
 
-        // Show custom input field if "Custom Amount" is selected
+        // Show custom quantity input if "Custom" is selected
         printQuantity.addEventListener('change', function() {
             customQuantity.style.display = this.value === 'custom' ? 'block' : 'none';
         });
 
-        // Display uploaded image in the preview
+        // Change preview shape based on selected option
+        shapeSelect.addEventListener('change', function() {
+            const shape = shapeSelect.value;
+            previewContainer.className = `preview-shape ${shape}`;
+        });
+
+        // Display uploaded image in preview
         imageUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
-                    previewImage.style.display = 'block'; // Ensure image displays
+                    previewImage.style.display = 'block';
+                    updateImageSize();
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // Function to adjust image size
-        function adjustImageSize(action) {
-            let currentSize = parseInt(sizeSlider.value);
-            if (action === 'increase') {
-                sizeSlider.value = Math.min(currentSize + 10, 200);
-            } else {
-                sizeSlider.value = Math.max(currentSize - 10, 10);
-            }
-            updateImageSize();
-        }
+        // Adjust image size based on slider
+        sizeSlider.addEventListener('input', updateImageSize);
 
         function updateImageSize() {
             const scale = sizeSlider.value / 100;
             previewImage.style.transform = `scale(${scale})`;
             sizeDisplay.textContent = `${sizeSlider.value}%`;
-        }
-
-        function resetImageSize() {
-            sizeSlider.value = 100;
-            updateImageSize();
         }
     </script>
 </body>
