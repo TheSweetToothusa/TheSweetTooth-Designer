@@ -1,14 +1,24 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>The Sweet Tooth - Design Template</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@400;500;600&family=Roboto&family=Open+Sans&family=Lato&display=swap" rel="stylesheet">
     <style>
-        /* Add CSS styling for different shapes */
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 20px;
+            margin: 0;
+        }
+
         .business-header {
             width: 100%;
             text-align: center;
             padding: 20px 0;
+            margin-bottom: 20px;
             background: #ff69b4;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -18,22 +28,18 @@
             font-weight: 900;
             font-size: 32px;
             color: white;
-        }
-
-        .controls, .preview-shape {
-            margin: 20px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .controls {
+            margin-bottom: 20px;
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             width: 300px;
-        }
-
-        .control-group {
-            margin-bottom: 15px;
         }
 
         .preview-shape {
@@ -44,25 +50,194 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 20px;
         }
 
-        .oreo, .business-card, .plaque-a, .plaque-b, .paver {
-            border-radius: 4px;
+        .oreo {
+            width: 1.5in;
+            height: 1.5in;
+            border-radius: 50%;
         }
 
-        /* Set specific dimensions for different shapes */
-        .oreo { width: 1.5in; height: 1.5in; border-radius: 50%; }
-        .business-card { width: 3.9in; height: 2in; }
-        .plaque-a { width: 6.3in; height: 2.2in; }
-        .plaque-b { width: 6.4in; height: 4in; }
-        .paver { width: 5.5in; height: 2.2in; }
+        .square {
+            width: 4.5in;
+            height: 4.5in;
+        }
 
-        /* Image styling */
+        .business-card {
+            width: 3.9in;
+            height: 2in;
+        }
+
+        .plaque-a {
+            width: 6.3in;
+            height: 2.2in;
+        }
+
+        .plaque-b {
+            width: 6.4in;
+            height: 4in;
+        }
+
+        .paver {
+            width: 5.5in;
+            height: 2.2in;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #preview-image {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            padding: 5%;
+            box-sizing: border-box;
+        }
+
+        #preview-text {
+            position: absolute;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 90%;
+            z-index: 2;
+        }
+
+        .rotation-controls {
             display: none;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .rotation-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .rotation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .rotation-btn {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .template-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .print-layout {
+            display: none;
+            background: white;
+            width: 8.5in;
+            height: 11in;
+            position: relative;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .print-grid {
+            padding: 0.5in;
+            display: grid;
+            gap: 0.3in;
+            justify-content: center;
+        }
+
+        .print-item {
+            border: 2px solid rgba(51, 51, 51, 0.3);
+            overflow: hidden;
+            position: relative;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .print-item .image-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5%;
+            box-sizing: border-box;
+        }
+
+        .print-item .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform-origin: center;
+        }
+
+        .action-buttons {
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            background: #ff1493;
+        }
+
+        @media print {
+            @page {
+                size: letter;
+                margin: 0;
+            }
+            
+            body * {
+                visibility: hidden;
+            }
+            
+            .print-layout,
+            .print-layout * {
+                visibility: visible;
+            }
+
+            .print-layout {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
         }
     </style>
 </head>
@@ -70,92 +245,195 @@
     <div class="business-header">
         <h1 class="page-title">The Sweet Tooth</h1>
     </div>
-
+    
     <div class="template-container">
         <div class="controls">
-            <div class="control-group">
-                <label for="shape-select">Select Shape:</label>
-                <select id="shape-select">
-                    <option value="oreo">Oreo (1.5" circle)</option>
-                    <option value="business-card">Business Card (3.9" × 2")</option>
-                    <option value="plaque-a">Plaque A (6.3" × 2.2")</option>
-                    <option value="plaque-b">Plaque B (6.4" × 4")</option>
-                    <option value="paver">Artistic Paver (5.5" × 2.2")</option>
-                </select>
-            </div>
+            <label for="shape-select">Select Shape:</label>
+            <select id="shape-select">
+                <option value="oreo">Oreo (1.5" circle)</option>
+                <option value="square">Square (4.5" × 4.5")</option>
+                <option value="business-card">Business Card (3.9" × 2")</option>
+                <option value="plaque-a">Plaque A (6.3" × 2.2")</option>
+                <option value="plaque-b">Plaque B (6.4" × 4")</option>
+                <option value="paver">Artistic Paver (5.5" × 2.2")</option>
+            </select>
 
-            <div class="control-group">
-                <label for="print-quantity">Print Quantity:</label>
-                <select id="print-quantity">
-                    <option value="full">Full Page</option>
-                    <option value="half">Half Page</option>
-                    <option value="single">Single</option>
-                    <option value="custom">Custom Amount</option>
-                </select>
-                <div id="custom-quantity" style="display: none;">
-                    <input type="number" min="1" max="20" value="1" placeholder="Enter custom amount">
+            <label for="image-upload">Upload Image:</label>
+            <input type="file" id="image-upload" accept="image/*">
+
+            <div id="rotation-controls" class="rotation-controls">
+                <label>Rotate Image:</label>
+                <input type="range" id="rotation-slider" class="rotation-slider" min="0" max="360" value="0">
+                <div class="rotation-buttons">
+                    <button onclick="rotateImage(-90)" class="rotation-btn">↺ 90°</button>
+                    <span id="rotation-value">0°</span>
+                    <button onclick="rotateImage(90)" class="rotation-btn">↻ 90°</button>
                 </div>
+                <button onclick="resetRotation()" class="rotation-btn">Reset Rotation</button>
             </div>
+            
+            <label for="text-input">Add Text:</label>
+            <input type="text" id="text-input" placeholder="Enter text here">
+            
+            <label for="font-family">Font Style:</label>
+            <select id="font-family">
+                <option value="Poppins">Poppins</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Lato">Lato</option>
+                <option value="Montserrat">Montserrat</option>
+            </select>
+            
+            <label for="font-size">Font Size:</label>
+            <input type="number" id="font-size" value="20" min="8" max="72">
+            
+            <label for="text-color">Text Color:</label>
+            <input type="color" id="text-color" value="#000000">
 
-            <div class="control-group">
-                <label for="image-upload">Upload Image:</label>
-                <input type="file" id="image-upload" accept="image/*">
-            </div>
-
-            <div class="control-group">
-                <label for="size-slider">Adjust Image Size:</label>
-                <input type="range" id="size-slider" min="10" max="200" value="100">
-                <span id="size-display">100%</span>
-            </div>
+            <label for="border-width">Border Thickness (px):</label>
+            <input type="number" id="border-width" value="2" min="0" max="10" step="1">
         </div>
 
         <div id="preview-container" class="preview-shape oreo">
-            <img id="preview-image" src="">
+            <div class="image-container">
+                <img id="preview-image">
+            </div>
+            <div id="preview-text"></div>
         </div>
+    </div>
+
+    <div class="action-buttons">
+        <button onclick="createPrintLayout()">Create Print Layout</button>
+        <button onclick="window.print()">Print</button>
+    </div>
+
+    <div class="print-layout">
+        <div id="print-grid" class="print-grid"></div>
     </div>
 
     <script>
         const imageUpload = document.getElementById('image-upload');
+        const textInput = document.getElementById('text-input');
+        const fontFamily = document.getElementById('font-family');
+        const fontSize = document.getElementById('font-size');
+        const textColor = document.getElementById('text-color');
+        const borderWidth = document.getElementById('border-width');
         const previewImage = document.getElementById('preview-image');
+        const previewText = document.getElementById('preview-text');
         const shapeSelect = document.getElementById('shape-select');
         const previewContainer = document.getElementById('preview-container');
-        const sizeSlider = document.getElementById('size-slider');
-        const sizeDisplay = document.getElementById('size-display');
-        const printQuantity = document.getElementById('print-quantity');
-        const customQuantity = document.getElementById('custom-quantity');
+        const rotationControls = document.getElementById('rotation-controls');
+        const rotationSlider = document.getElementById('rotation-slider');
+        const rotationValue = document.getElementById('rotation-value');
 
-        // Show custom quantity input if "Custom" is selected
-        printQuantity.addEventListener('change', function() {
-            customQuantity.style.display = this.value === 'custom' ? 'block' : 'none';
-        });
+        let currentImageDataUrl = '';
+        let currentRotation = 0;
 
-        // Change preview shape based on selected option
         shapeSelect.addEventListener('change', function() {
-            const shape = shapeSelect.value;
+            const shape = this.value;
             previewContainer.className = `preview-shape ${shape}`;
+            rotationControls.style.display = shape === 'oreo' ? 'none' : 'block';
         });
 
-        // Display uploaded image in preview
-        imageUpload.addEventListener('change', function(event) {
-            const file = event.target.files[0];
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    updateImageSize();
-                };
+                    currentImageDataUrl = e.target.result;
+                    previewImage.src = currentImageDataUrl;
+                    resetRotation();
+                }
                 reader.readAsDataURL(file);
             }
         });
 
-        // Adjust image size based on slider
-        sizeSlider.addEventListener('input', updateImageSize);
+        textInput.addEventListener('input', updateText);
+        fontFamily.addEventListener('change', updateText);
+        fontSize.addEventListener('input', updateText);
+        textColor.addEventListener('input', updateText);
+        borderWidth.addEventListener('input', updateBorder);
+        rotationSlider.addEventListener('input', function() {
+            currentRotation = parseInt(this.value);
+            updateRotation();
+        });
 
-        function updateImageSize() {
-            const scale = sizeSlider.value / 100;
-            previewImage.style.transform = `scale(${scale})`;
-            sizeDisplay.textContent = `${sizeSlider.value}%`;
+        function updateText() {
+            previewText.textContent = textInput.value;
+            previewText.style.fontFamily = fontFamily.value;
+            previewText.style.fontSize = `${fontSize.value}px`;
+            previewText.style.color = textColor.value;
+        }
+
+        function updateBorder() {
+            const width = borderWidth.value;
+            previewContainer.style.border = `${width}px solid rgba(51, 51, 51, 0.3)`;
+        }
+
+        function rotateImage(degrees) {
+            currentRotation = (currentRotation + degrees + 360) % 360;
+            updateRotation();
+        }
+
+        function updateRotation() {
+            rotationSlider.value = currentRotation;
+            rotationValue.textContent = `${currentRotation}°`;
+            previewImage.style.transform = `rotate(${currentRotation}deg)`;
+        }
+
+        function resetRotation() {
+            currentRotation = 0;
+            updateRotation();
+        }
+
+        function createPrintLayout() {
+            const printGrid = document.getElementById('print-grid');
+            const shape = shapeSelect.value;
+            printGrid.innerHTML = '';
+            
+            const gridConfigs = {
+                'oreo': { cols: 4, rows: 5 },
+                'square': { cols: 1, rows: 2 },
+                'business-card': { cols: 2, rows: 4 },
+                'plaque-a': { cols: 1, rows: 4 },
+                'plaque-b': { cols: 1, rows: 2 },
+                'paver': { cols: 1, rows: 4 }
+            };
+
+            const config = gridConfigs[shape];
+            printGrid.style.gridTemplateColumns = `repeat(${config.cols}, auto)`;
+            
+            const totalItems = config.cols * config.rows;
+            
+            for (let i = 0; i < totalItems; i++) {
+                const item = document.createElement('div');
+                item.className = `print-item ${shape}`;
+                item.style.border = previewContainer.style.border;
+                
+                if (currentImageDataUrl) {
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-container';
+                    const img = document.createElement('img');
+                    img.src = currentImageDataUrl;
+                    img.style.transform = `rotate(${currentRotation}deg)`;
+                    imageContainer.appendChild(img);
+                    item.appendChild(imageContainer);
+                }
+                
+                if (textInput.value) {
+                    const text = document.createElement('div');
+                    text.className = 'text-overlay';
+                    text.textContent = textInput.value;
+                    text.style.fontFamily = fontFamily.value;
+                    text.style.fontSize = `${fontSize.value}px`;
+                    text.style.color = textColor.value;
+                    item.appendChild(text);
+                }
+                
+                printGrid.appendChild(item);
+            }
+            
+            document.querySelector('.print-layout').style.display = 'block';
         }
     </script>
 </body>
