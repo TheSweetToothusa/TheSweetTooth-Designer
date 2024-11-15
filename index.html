@@ -433,7 +433,28 @@
                 printGrid.appendChild(item);
             }
             
-            document.querySelector('.print-layout').style.display = 'block';
+            document.querySelector('.print-layout').style.display = 'block';// Reference the new controls
+const saveImageButton = document.getElementById('save-image');
+const imageSizeSlider = document.getElementById('image-size-slider');
+
+// Save Image
+saveImageButton.addEventListener('click', function() {
+    if (currentImageDataUrl) {
+        const link = document.createElement('a');
+        link.href = currentImageDataUrl;
+        link.download = 'sweet_tooth_image.png';
+        link.click();
+    } else {
+        alert('No image uploaded to save.');
+    }
+});
+
+// Adjust Image Size
+imageSizeSlider.addEventListener('input', function() {
+    const scale = this.value / 100; // Convert slider value to scale factor
+    previewImage.style.transform = `scale(${scale}) rotate(${currentRotation}deg)`;
+});
+
         }
     </script>
 </body>
