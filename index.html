@@ -85,15 +85,16 @@
         }
 
         .image-container {
+            position: relative;
             width: 100%;
             height: 100%;
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
         #preview-image {
+            position: absolute;
+            transform-origin: center;
+            cursor: grab;
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -139,6 +140,10 @@
             display: flex;
             gap: 20px;
             margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin: 10px 0;
         }
 
         label {
@@ -271,6 +276,12 @@
                 </div>
                 <button onclick="resetRotation()" class="rotation-btn">Reset Rotation</button>
             </div>
+
+            <div class="control-group">
+                <label for="image-size">Image Size:</label>
+                <input type="range" id="image-size" min="10" max="200" value="100">
+                <span id="size-value">100%</span>
+            </div>
             
             <label for="text-input">Add Text:</label>
             <input type="text" id="text-input" placeholder="Enter text here">
@@ -328,6 +339,12 @@
 
         let currentImageDataUrl = '';
         let currentRotation = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let imageX = 0;
+        let imageY = 0;
+        let imageScale = 1;
 
         shapeSelect.addEventListener('change', function() {
             const shape = this.value;
@@ -343,6 +360,13 @@
                     currentImageDataUrl = e.target.result;
                     previewImage.src = currentImageDataUrl;
                     resetRotation();
+                    initializeDragging();
+                    previewImage.style.cursor = 'grab';
+                    // Reset position and scale
+                    imageX = 0;
+                    imageY = 0;
+                    imageScale = 1;
+                    updateImageTransform();
                 }
                 reader.readAsDataURL(file);
             }
@@ -378,7 +402,7 @@
         function updateRotation() {
             rotationSlider.value = currentRotation;
             rotationValue.textContent = `${currentRotation}°`;
-            previewImage.style.transform = `rotate(${currentRotation}deg)`;
+            updateImageTransform();
         }
 
         function resetRotation() {
@@ -386,9 +410,56 @@
             updateRotation();
         }
 
+        function initializeDragging() {
+            const imageContainer = document.querySelector('.image-container');
+            
+            imageContainer.addEventListener('mousedown', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDragging);
+        }
+
+        function startDragging(e) {
+            isDragging = true;
+            dragStartX = e.clientX - imageX;
+            dragStartY = e.clientY - imageY;
+            previewImage.style.cursor = 'grabbing';
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            const newX = e.clientX - dragStartX;
+            const newY = e.clientY - dragStartY;
+            
+            imageX = newX;
+            imageY = newY;
+            
+            updateImageTransform();
+        }
+
+        function stopDragging() {
+            isDragging = false;
+            previewImage.style.cursor = 'grab';
+        }
+
+        function updateImageTransform() {
+            previewImage.style.transform = `translate(${imageX}px, ${imageY}px) scale(${imageScale}) rotate(${currentRotation}deg)`;
+        }
+
+        // Add image size control
+        const imageSizeInput = document.getElementById('image-size');
+        const sizeValue = document.getElementById('size-value');
+
+        imageSizeInput.addEventListener('input', function() {
+            imageScale = this.value / 100;
+            sizeValue.textContent = `${this.value}%`;
+            updateImageTransform();
+        });
+
         function createPrintLayout() {
             const printGrid = document.getElementById('print-grid');
-            const shape = shapeSelect.value;
+            const shape = shapeSelect.
+const shape = shapeSelect.value;
             printGrid.innerHTML = '';
             
             const gridConfigs = {
@@ -415,7 +486,7 @@
                     imageContainer.className = 'image-container';
                     const img = document.createElement('img');
                     img.src = currentImageDataUrl;
-                    img.style.transform = `rotate(${currentRotation}deg)`;
+                    img.style.transform = `translate(${imageX}px, ${imageY}px) scale(${imageScale}) rotate(${currentRotation}deg)`;
                     imageContainer.appendChild(img);
                     item.appendChild(imageContainer);
                 }
@@ -433,28 +504,7 @@
                 printGrid.appendChild(item);
             }
             
-            document.querySelector('.print-layout').style.display = 'block';// Reference the new controls
-const saveImageButton = document.getElementById('save-image');
-const imageSizeSlider = document.getElementById('image-size-slider');
-
-// Save Image
-saveImageButton.addEventListener('click', function() {
-    if (currentImageDataUrl) {
-        const link = document.createElement('a');
-        link.href = currentImageDataUrl;
-        link.download = 'sweet_tooth_image.png';
-        link.click();
-    } else {
-        alert('No image uploaded to save.');
-    }
-});
-
-// Adjust Image Size
-imageSizeSlider.addEventListener('input', function() {
-    const scale = this.value / 100; // Convert slider value to scale factor
-    previewImage.style.transform = `scale(${scale}) rotate(${currentRotation}deg)`;
-});
-
+            document.querySelector('.print-layout').style.display = 'block';
         }
     </script>
 </body>
