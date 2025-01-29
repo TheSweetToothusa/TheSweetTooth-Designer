@@ -323,6 +323,7 @@
     </div>
 
     <script>
+        console.log("Script is running");
         const imageUpload = document.getElementById('image-upload');
         const textInput = document.getElementById('text-input');
         const fontFamily = document.getElementById('font-family');
@@ -338,21 +339,17 @@
         const rotationValue = document.getElementById('rotation-value');
 
         let currentImageDataUrl = '';
+        console.log("Image upload element:", imageUpload);
+        console.log("Shape select element:", shapeSelect);
         let currentRotation = 0;
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let imageX = 0;
-        let imageY = 0;
-        let imageScale = 1;
 
         shapeSelect.addEventListener('change', function() {
             const shape = this.value;
             previewContainer.className = `preview-shape ${shape}`;
             rotationControls.style.display = shape === 'oreo' ? 'none' : 'block';
         });
-
-        imageUpload.addEventListener('change', function(e) {
+           imageUpload.addEventListener('change', function(e) {
+            console.log("File upload triggered");    // Add this line here
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
